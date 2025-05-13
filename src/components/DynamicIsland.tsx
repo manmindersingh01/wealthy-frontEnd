@@ -2,6 +2,9 @@ import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
+import axios from "axios";
+import { useRecoilState } from "recoil";
+import { ModeToggle } from "./mode-toggle";
 
 interface DynamicIslandProps {
   className?: string;
@@ -14,6 +17,31 @@ const DynamicIsland = ({
 }: DynamicIslandProps) => {
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
+
+  const checkLoggedin = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user`,
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (res.data) {
+        // setData(res.data);
+        setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Error checking login status:", error);
+      //setData({});
+      setIsLoggedIn(false);
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -21,6 +49,7 @@ const DynamicIsland = ({
     };
 
     window.addEventListener("scroll", handleScroll);
+    checkLoggedin();
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
@@ -76,33 +105,30 @@ const DynamicIsland = ({
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.2 }}
               >
-                <a
-                  href="#features"
-                  className={cn(
-                    "text-sm font-medium hover:text-[#9290C3] transition-colors",
-                    isScrolled ? "text-white/90" : "text-[#535C91]"
-                  )}
-                >
-                  Features
-                </a>
-                <a
-                  href="#pricing"
-                  className={cn(
-                    "text-sm font-medium hover:text-[#9290C3] transition-colors",
-                    isScrolled ? "text-white/90" : "text-[#535C91]"
-                  )}
-                >
-                  Pricing
-                </a>
-                <a
-                  href="#testimonials"
-                  className={cn(
-                    "text-sm font-medium hover:text-[#9290C3] transition-colors",
-                    isScrolled ? "text-white/90" : "text-[#535C91]"
-                  )}
-                >
-                  Testimonials
-                </a>
+                {isLoggedIn ? (
+                  <>
+                    <a
+                      href="/dashboard"
+                      className={cn(
+                        "text-sm font-medium hover:text-[#9290C3] transition-colors",
+                        isScrolled ? "text-white/90" : "text-[#535C91]"
+                      )}
+                    >
+                      Dashboard
+                    </a>
+                    <ModeToggle />
+                  </>
+                ) : (
+                  <a
+                    href="/signup"
+                    className={cn(
+                      "text-sm font-medium hover:text-[#9290C3] transition-colors",
+                      isScrolled ? "text-white/90" : "text-[#535C91]"
+                    )}
+                  >
+                    Sign Up
+                  </a>
+                )}
               </motion.div>
             )}
           </AnimatePresence>

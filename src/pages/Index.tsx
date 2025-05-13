@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import axios from "axios";
 
 import {
   ChevronRight,
@@ -19,9 +20,12 @@ import {
   CarouselPrevious,
 } from "@/components/ui/carousel";
 import DynamicIsland from "@/components/DynamicIsland";
+import { useEffect, useState } from "react";
 //import { Toaster } from "@/components/ui/sonner";
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   const scrollToFeatures = () => {
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
@@ -29,6 +33,18 @@ const Index = () => {
   const handleDemoClick = () => {
     // Toaster("Demo access granted!");
   };
+
+  const checkLoggedin = async () => {
+    const res = await axios.get(`${import.meta.env.BASE_URL}/api/vi/user`);
+
+    if (res.data.user) {
+      setIsLoggedIn(true);
+    }
+  };
+
+  useEffect(() => {
+    const status = checkLoggedin();
+  }, []);
 
   return (
     <div className="min-h-screen w-full overflow-hidden text-foreground">
@@ -38,7 +54,7 @@ const Index = () => {
       </div>
 
       {/* Dynamic Island Header */}
-      <DynamicIsland />
+      {/* <DynamicIsland /> */}
 
       {/* Hero Section */}
       <section className="container pt-32 pb-16 md:pt-40 md:pb-24 relative">
