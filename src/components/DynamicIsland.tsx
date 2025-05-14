@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronDown, ChevronUp, DollarSign } from "lucide-react";
 import { cn } from "@/lib/utils";
 import axios from "axios";
-import { useRecoilState } from "recoil";
 import { ModeToggle } from "./mode-toggle";
 
 interface DynamicIslandProps {
@@ -18,8 +17,6 @@ const DynamicIsland = ({
   const [isExpanded, setIsExpanded] = useState(initialExpanded);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   const checkLoggedin = async () => {
     try {
@@ -65,7 +62,7 @@ const DynamicIsland = ({
         className={cn(
           "relative rounded-full backdrop-blur-md border border-gray-200/30 shadow-lg flex items-center justify-between",
           isExpanded ? "w-[90%] max-w-4xl" : "w-[280px]",
-          isScrolled ? "bg-[#1B1A55]/80" : "bg-black/10",
+          isScrolled ? "bg-primary/70" : "bg-background",
           className
         )}
         initial={{ y: -100 }}
@@ -81,21 +78,22 @@ const DynamicIsland = ({
         }}
       >
         <div className="flex items-center gap-2 px-4 py-3 flex-1">
-          <DollarSign
-            className={cn(
-              "h-6 w-6",
-              isScrolled ? "text-white" : "text-[#535C91]"
-            )}
-          />
-          <span
-            className={cn(
-              "text-lg font-bold tracking-tight transition-colors",
-              isScrolled ? "text-white" : "text-[#1B1A55]"
-            )}
-          >
-            Cally Wealthy
-          </span>
-
+          <a className="flex items-center gap-2" href="/">
+            <DollarSign
+              className={cn(
+                "h-6 w-6",
+                isScrolled ? "text-white" : "text-primary"
+              )}
+            />
+            <span
+              className={cn(
+                "text-lg font-bold tracking-tight transition-colors",
+                isScrolled ? "text-white" : "text-primary"
+              )}
+            >
+              Cally Wealthy
+            </span>
+          </a>
           <AnimatePresence>
             {isExpanded && (
               <motion.div
@@ -111,7 +109,7 @@ const DynamicIsland = ({
                       href="/dashboard"
                       className={cn(
                         "text-sm font-medium hover:text-[#9290C3] transition-colors",
-                        isScrolled ? "text-white/90" : "text-[#535C91]"
+                        isScrolled ? "text-white/90" : "text-primary"
                       )}
                     >
                       Dashboard

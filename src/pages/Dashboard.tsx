@@ -1,6 +1,6 @@
 import { CreateAccountDrawer } from "@/components/CreateAccountDrawer";
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   Card,
@@ -46,18 +46,6 @@ interface Space {
   isDefault: boolean;
 }
 
-type Transaction = {
-  id: string;
-  amount: number;
-  type: string;
-  createdAt: string;
-};
-
-type SpacesData = {
-  spaces: Space;
-  transactions: Transaction[] | null;
-};
-
 type Budget = {
   id: number;
   amount: number;
@@ -95,9 +83,8 @@ const Dashboard = () => {
         }
       );
 
-      const data: SpacesData[] = res.data || [];
-      const flattenedSpaces = data.map((item) => item.spaces);
-      setSpaces(flattenedSpaces);
+      console.log("res", res.data);
+      setSpaces(res.data);
     } catch (error) {
       console.error("Error fetching spaces:", error);
       toast.error("Failed to fetch spaces");
@@ -156,7 +143,7 @@ const Dashboard = () => {
 
     setIsSubmitting(true);
     try {
-      const res = await axios.post(
+      await axios.post(
         `${import.meta.env.VITE_BASE_URL}/api/v1/update-budget`,
         {
           amount: Number(budgetAmount),
@@ -288,7 +275,7 @@ const Dashboard = () => {
   ];
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-7xl">
+    <div className="container bg-background mx-auto px-4 py-8 max-w-7xl">
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -313,8 +300,9 @@ const Dashboard = () => {
       </motion.div>
       <section className="mb-8">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-xl font-semibold">Monthly Budget</h2>
+          <h2 className="text-xl text-primary font-semibold">Monthly Budget</h2>
           <Button
+            className="text-white"
             variant="outline"
             size="sm"
             onClick={() => getBudget()}

@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -19,7 +18,6 @@ import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
 
 // Define the schema for the space
 const spaceSchema = z.object({
@@ -32,12 +30,6 @@ const spaceSchema = z.object({
 type Space = z.infer<typeof spaceSchema>;
 
 export function CreateAccountDrawer({ data }: { data: string }) {
-  const [goal, setGoal] = React.useState(350);
-  const navigate = useNavigate();
-  function onClick(adjustment: number) {
-    setGoal(Math.max(200, Math.min(400, goal + adjustment)));
-  }
-
   const {
     register,
     handleSubmit,
@@ -108,25 +100,25 @@ export function CreateAccountDrawer({ data }: { data: string }) {
       <DrawerTrigger asChild>
         <Button
           variant="outline"
-          className=" m-2 hover:bg-[#535C91] transition-colors duration-300"
+          className=" m-2 border border-border text-white hover:bg-[#535C91] transition-colors duration-300"
         >
           {data}
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="bg-gradient-to-br from-[#f8f9fa] to-[#e9ecef]">
+      <DrawerContent className="bg-background">
         <div className="mx-auto w-full max-w-sm">
           <DrawerHeader>
-            <DrawerTitle className="text-2xl font-bold  animate-fade-in">
+            <DrawerTitle className="text-2xl text-white font-bold  animate-fade-in">
               Create your Space
             </DrawerTitle>
             <DrawerDescription
-              className="text-[#535C91] animate-fade-in"
+              className="text-primary/40 animate-fade-in"
               style={{ animationDelay: "0.2s" }}
             >
               Fill in the details to create your new account space
             </DrawerDescription>
           </DrawerHeader>
-          <div className="p-4 border rounded-lg mb-5 bg-white shadow-md">
+          <div className="p-4 border border-border rounded-lg mb-5 bg-black/70 text-white shadow-md">
             {/* @ts-ignore */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
               {formFields.map((field, index) => (

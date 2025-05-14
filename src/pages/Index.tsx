@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import axios from "axios";
+import { toast } from "sonner";
 
 import {
   ChevronRight,
@@ -19,58 +19,62 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import DynamicIsland from "@/components/DynamicIsland";
-import { useEffect, useState } from "react";
-//import { Toaster } from "@/components/ui/sonner";
+import { useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
   const scrollToFeatures = () => {
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const handleDemoClick = () => {
-    // Toaster("Demo access granted!");
+    toast("Demo access granted!", {
+      description: "Check your email for login details.",
+    });
   };
 
   const checkLoggedin = async () => {
-    const res = await axios.get(`${import.meta.env.BASE_URL}/api/vi/user`);
-
-    if (res.data.user) {
-      setIsLoggedIn(true);
+    try {
+      const res = await axios.get(`${import.meta.env.BASE_URL}/api/vi/user`);
+      if (res.data.user) {
+        // setIsLoggedIn(true);
+      }
+    } catch (error) {
+      console.error("Error checking login status:", error);
     }
   };
-
+  const navigate = useNavigate();
   useEffect(() => {
-    const status = checkLoggedin();
+    checkLoggedin();
   }, []);
 
   return (
-    <div className="min-h-screen w-full overflow-hidden text-foreground">
+    <div className="min-h-screen p-0 bg-background w-full overflow-hidden text-foreground">
       {/* Background gradients */}
-      <div className="absolute inset-0 -z-10 h-full w-full bg-white bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] bg-[size:6rem_4rem]">
-        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,#9290C3,transparent)]"></div>
+      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[linear-gradient(to_right,hsl(var(--border))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--border))_1px,transparent_1px)] bg-[size:6rem_4rem]">
+        <div className="absolute bottom-0 left-0 right-0 top-0 bg-[radial-gradient(circle_800px_at_100%_200px,hsl(var(--chart-2)),transparent)]"></div>
       </div>
 
-      {/* Dynamic Island Header */}
-      {/* <DynamicIsland /> */}
-
       {/* Hero Section */}
-      <section className="container pt-32 pb-16 md:pt-40 md:pb-24 relative">
+      <section className="container px-5 pt-32 pb-16 md:pt-40 md:pb-24 relative">
         <div className="max-w-3xl mx-auto text-center animate-fade-in">
-          <Badge className="mb-4 bg-[#9290C3]/20 text-[#1B1A55] hover:bg-[#9290C3]/30">
+          <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30">
             ✨ Financial Freedom Awaits
           </Badge>
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-[#1B1A55] to-[#535C91]">
+          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6 bg-clip-text text-transparent bg-gradient-to-b from-primary to-primary/70">
             Take Control of Your Financial Future
           </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+          <p className="text-lg md:text-xl text-muted-foreground mb-8 max-w-2xl mx-auto">
             Cally Wealthy helps you track expenses, manage investments, and
             achieve your financial goals—all in one beautiful dashboard.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button size="lg" className="bg-[#1B1A55] hover:bg-[#070F2B] group">
+            <Button
+              onClick={() => navigate("/dashboard")}
+              size="lg"
+              className="bg-primary hover:bg-primary/90 group"
+            >
               Start For Free
               <ChevronRight className="ml-1 h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Button>
@@ -78,7 +82,7 @@ const Index = () => {
               variant="outline"
               size="lg"
               onClick={scrollToFeatures}
-              className="border-[#535C91] text-[#535C91] hover:bg-[#535C91]/10"
+              className="border-primary text-primary hover:bg-primary/10"
             >
               See Features
             </Button>
@@ -87,18 +91,18 @@ const Index = () => {
 
         {/* Dashboard Preview */}
         <div className="mt-16 max-w-5xl mx-auto hover-scale">
-          <div className="relative rounded-xl overflow-hidden shadow-2xl border border-[#9290C3]/20 bg-white">
-            <div className="absolute inset-0 [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#9290C3_100%)] opacity-20"></div>
-            <div className="h-12 bg-[#070F2B]/5 flex items-center px-4 border-b border-[#9290C3]/20">
+          <div className="relative rounded-xl overflow-hidden shadow-2xl border border-primary/20 bg-card">
+            <div className="absolute inset-0 [background:radial-gradient(125%_125%_at_50%_10%,hsl(var(--card))_40%,hsl(var(--chart-2))_100%)] opacity-20"></div>
+            <div className="h-12 bg-primary/5 flex items-center px-4 border-b border-primary/20">
               <div className="flex space-x-2">
                 <div className="w-3 h-3 rounded-full bg-red-500"></div>
                 <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                 <div className="w-3 h-3 rounded-full bg-green-500"></div>
               </div>
             </div>
-            <div className="p-4 h-[300px] md:h-[400px] bg-white/50 flex items-center justify-center">
-              <div className="text-center text-gray-500">
-                <BarChart className="w-16 h-16 mx-auto mb-4 text-[#535C91]" />
+            <div className="p-4 h-[300px] md:h-[400px] bg-card/50 flex items-center justify-center">
+              <div className="text-center text-muted-foreground">
+                <BarChart className="w-16 h-16 mx-auto mb-4 text-primary" />
                 <p className="font-medium">Dashboard Visualization</p>
               </div>
             </div>
@@ -109,17 +113,17 @@ const Index = () => {
       {/* Features Section */}
       <section
         id="features"
-        className="py-20 px-4 bg-gradient-to-b from-white via-[#9290C3]/10  to-white"
+        className="py-20 px-10 bg-gradient-to-b from-background to-primary/5"
       >
         <div className="container">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#535C91]/20 text-[#1B1A55] hover:bg-[#535C91]/30">
+            <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30">
               Features
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-[#1B1A55]">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-primary">
               Everything You Need to Manage Your Finances
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Powerful tools to help you take control of your money,
               investments, and financial goals.
             </p>
@@ -166,16 +170,16 @@ const Index = () => {
             ].map((feature, index) => (
               <Card
                 key={index}
-                className="border border-[#9290C3]/20 hover:border-[#535C91]/50 transition-all duration-300 hover:shadow-md group"
+                className="border border-primary/20 hover:border-primary/50 transition-all duration-300 hover:shadow-md group"
               >
                 <CardContent className="p-6">
-                  <div className="w-12 h-12 rounded-lg bg-[#535C91]/10 flex items-center justify-center mb-4 group-hover:bg-[#535C91]/20 transition-colors">
-                    <feature.icon className="w-6 h-6 text-[#1B1A55]" />
+                  <div className="w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
+                    <feature.icon className="w-6 h-6 text-primary" />
                   </div>
-                  <h3 className="text-xl font-medium mb-2 text-[#1B1A55]">
+                  <h3 className="text-xl font-medium mb-2 text-primary">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-600">{feature.description}</p>
+                  <p className="text-muted-foreground">{feature.description}</p>
                 </CardContent>
               </Card>
             ))}
@@ -184,16 +188,16 @@ const Index = () => {
       </section>
 
       {/* Pricing Section */}
-      <section id="pricing" className=" rounded-lg py-20">
+      <section id="pricing" className=" px-5 py-20">
         <div className="container">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#535C91]/20 text-[#1B1A55] hover:bg-[#535C91]/30">
+            <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30">
               Pricing
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-[#1B1A55]">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-primary">
               Simple, Transparent Pricing
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Choose the perfect plan for your financial needs. No hidden fees,
               cancel anytime.
             </p>
@@ -250,42 +254,47 @@ const Index = () => {
                 key={index}
                 className={`border ${
                   plan.highlighted
-                    ? "border-[#1B1A55] shadow-lg shadow-[#9290C3]/20"
-                    : "border-[#9290C3]/20"
+                    ? "border-primary shadow-lg shadow-primary/20"
+                    : "border-primary/20"
                 } hover:shadow-md transition-all duration-300 relative`}
               >
                 {plan.highlighted && (
                   <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
-                    <Badge className="bg-[#1B1A55] text-white">
+                    <Badge className="bg-primary text-primary-foreground">
                       Most Popular
                     </Badge>
                   </div>
                 )}
                 <CardContent className="p-6">
-                  <h3 className="text-xl font-medium mb-2 text-[#1B1A55]">
+                  <h3 className="text-xl font-medium mb-2 text-primary">
                     {plan.title}
                   </h3>
                   <div className="mb-4">
-                    <span className="text-3xl font-bold text-[#1B1A55]">
+                    <span className="text-3xl font-bold text-primary">
                       {plan.price}
                     </span>
-                    <span className="text-gray-500">/month</span>
+                    <span className="text-muted-foreground">/month</span>
                   </div>
-                  <p className="text-gray-600 mb-6">{plan.description}</p>
+                  <p className="text-muted-foreground mb-6">
+                    {plan.description}
+                  </p>
                   <Button
                     className={`w-full mb-6 ${
                       plan.highlighted
-                        ? "bg-[#1B1A55] hover:bg-[#070F2B]"
-                        : "bg-white text-[#1B1A55] border border-[#1B1A55] hover:bg-[#1B1A55]/10"
+                        ? "bg-primary hover:bg-primary/90"
+                        : "bg-card text-primary border border-primary hover:bg-primary/10"
                     }`}
+                    onClick={handleDemoClick}
                   >
                     {plan.buttonText}
                   </Button>
                   <ul className="space-y-2">
                     {plan.features.map((feature, i) => (
                       <li key={i} className="flex items-center">
-                        <Check className="w-4 h-4 text-[#535C91] mr-2" />
-                        <span className="text-sm text-gray-600">{feature}</span>
+                        <Check className="w-4 h-4 text-primary mr-2" />
+                        <span className="text-sm text-muted-foreground">
+                          {feature}
+                        </span>
                       </li>
                     ))}
                   </ul>
@@ -297,22 +306,22 @@ const Index = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section id="testimonials" className="py-20 rounded-lg bg-[#1B1A55]/5">
+      <section id="testimonials" className="py-20  bg-primary/5">
         <div className="container">
           <div className="text-center mb-16">
-            <Badge className="mb-4 bg-[#535C91]/20 text-[#1B1A55] hover:bg-[#535C91]/30">
+            <Badge className="mb-4 bg-primary/20 text-primary hover:bg-primary/30">
               Testimonials
             </Badge>
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-[#1B1A55]">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-4 text-primary">
               What Our Users Say
             </h2>
-            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
               Join thousands of users who have transformed their financial lives
               with Cally Wealthy.
             </p>
           </div>
 
-          <Carousel className="max-w-4xl mx-auto">
+          <Carousel className="max-w-4xl  mx-auto">
             <CarouselContent>
               {[
                 {
@@ -336,18 +345,18 @@ const Index = () => {
               ].map((testimonial, index) => (
                 <CarouselItem key={index}>
                   <div className="p-8">
-                    <blockquote className="text-xl italic mb-6 text-gray-700">
-                      "{testimonial.quote}"
+                    <blockquote className="text-xl italic mb-6 text-foreground">
+                      {testimonial.quote}
                     </blockquote>
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-full bg-[#535C91] flex items-center justify-center text-white font-bold">
+                      <div className="w-10 h-10 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
                         {testimonial.author.charAt(0)}
                       </div>
                       <div>
-                        <p className="font-medium text-[#1B1A55]">
+                        <p className="font-medium text-primary">
                           {testimonial.author}
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-muted-foreground">
                           {testimonial.role}
                         </p>
                       </div>
@@ -365,18 +374,22 @@ const Index = () => {
       </section>
 
       {/* CTA Section */}
-      <section className="py-24 rounded-lg relative">
-        <div className="absolute inset-0 -z-10 h-full w-full [background:radial-gradient(125%_125%_at_50%_10%,#fff_40%,#9290C3_100%)] opacity-40"></div>
+      <section className="py-24 relative">
+        <div className="absolute inset-0 -z-10 h-full w-full [background:radial-gradient(125%_125%_at_50%_10%,hsl(var(--card))_40%,hsl(var(--chart-2))_100%)] opacity-40"></div>
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 text-[#1B1A55]">
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight mb-6 text-primary">
               Ready to Transform Your Financial Life?
             </h2>
-            <p className="text-lg text-gray-600 mb-8">
+            <p className="text-lg text-muted-foreground mb-8">
               Join thousands of users who are taking control of their finances
               with Cally Wealthy. Start your journey today.
             </p>
-            <Button size="lg" className="bg-[#1B1A55] hover:bg-[#070F2B]">
+            <Button
+              size="lg"
+              className="bg-primary hover:bg-primary/90"
+              onClick={handleDemoClick}
+            >
               Get Started Now
             </Button>
           </div>
@@ -384,7 +397,7 @@ const Index = () => {
       </section>
 
       {/* Footer */}
-      <footer className="  border-t border-b border-white m-2 p-4 rounded-lg bg-[#070F2B] text-white py-16">
+      <footer className="bg-primary md:px-20 px-2 text-primary-foreground py-16">
         <div className="container">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
@@ -392,31 +405,43 @@ const Index = () => {
                 <DollarSign className="h-6 w-6" />
                 <span className="text-lg font-bold">Cally Wealthy</span>
               </div>
-              <p className="text-sm text-gray-300">
+              <p className="text-sm text-primary-foreground/80">
                 Simplifying financial management for everyone. Take control of
                 your money with powerful, intuitive tools.
               </p>
             </div>
             <div>
               <h3 className="font-medium mb-4">Product</h3>
-              <ul className="space-y-2 text-sm text-gray-300">
+              <ul className="space-y-2 text-sm text-primary-foreground/80">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Features
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Pricing
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Testimonials
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     FAQ
                   </a>
                 </li>
@@ -424,24 +449,36 @@ const Index = () => {
             </div>
             <div>
               <h3 className="font-medium mb-4">Company</h3>
-              <ul className="space-y-2 text-sm text-gray-300">
+              <ul className="space-y-2 text-sm text-primary-foreground/80">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     About Us
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Careers
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Blog
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Press
                   </a>
                 </li>
@@ -449,33 +486,42 @@ const Index = () => {
             </div>
             <div>
               <h3 className="font-medium mb-4">Legal</h3>
-              <ul className="space-y-2 text-sm text-gray-300">
+              <ul className="space-y-2 text-sm text-primary-foreground/80">
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Privacy Policy
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Terms of Service
                   </a>
                 </li>
                 <li>
-                  <a href="#" className="hover:text-white transition-colors">
+                  <a
+                    href="#"
+                    className="hover:text-primary-foreground transition-colors"
+                  >
                     Security
                   </a>
                 </li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-700 mt-12 pt-8 flex flex-col md:flex-row gap-4 items-center justify-between">
-            <p className="text-sm text-gray-400">
+          <div className="border-t border-primary-foreground/20 mt-12 pt-8 flex flex-col md:flex-row gap-4 items-center justify-between">
+            <p className="text-sm text-primary-foreground/60">
               © {new Date().getFullYear()} Cally Wealthy. All rights reserved.
             </p>
             <div className="flex gap-4">
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
               >
                 <span className="sr-only">Twitter</span>
                 <svg
@@ -489,7 +535,7 @@ const Index = () => {
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
               >
                 <span className="sr-only">LinkedIn</span>
                 <svg
@@ -507,7 +553,7 @@ const Index = () => {
               </a>
               <a
                 href="#"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-primary-foreground/60 hover:text-primary-foreground transition-colors"
               >
                 <span className="sr-only">GitHub</span>
                 <svg
