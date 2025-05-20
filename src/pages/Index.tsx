@@ -19,15 +19,24 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "@/components/ui/carousel";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const navigate = useNavigate();
   const scrollToFeatures = () => {
     document.getElementById("features")?.scrollIntoView({ behavior: "smooth" });
   };
-
+  const handleStartforFree = () => {
+    if (isLoggedIn) {
+      console.log(isLoggedIn);
+      navigate("/dashboard");
+    } else {
+      navigate("/signup");
+    }
+  };
   const handleDemoClick = () => {
     toast("Demo access granted!", {
       description: "Check your email for login details.",
@@ -36,15 +45,23 @@ const Index = () => {
 
   const checkLoggedin = async () => {
     try {
-      const res = await axios.get(`${import.meta.env.BASE_URL}/api/vi/user`);
-      if (res.data.user) {
-        // setIsLoggedIn(true);
+      const res = await axios.get(
+        `${import.meta.env.VITE_BASE_URL}/api/v1/user`,
+        {
+          headers: {
+            Authorization: `${localStorage.getItem("token")}`,
+          },
+        }
+      );
+      console.log(res.data);
+      if (res.data) {
+        setIsLoggedIn(true);
       }
     } catch (error) {
       console.error("Error checking login status:", error);
     }
   };
-  const navigate = useNavigate();
+
   useEffect(() => {
     checkLoggedin();
   }, []);
@@ -71,7 +88,7 @@ const Index = () => {
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button
-              onClick={() => navigate("/dashboard")}
+              onClick={handleStartforFree}
               size="lg"
               className="bg-primary hover:bg-primary/90 group"
             >
